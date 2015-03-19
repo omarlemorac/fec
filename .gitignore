@@ -1,0 +1,16 @@
+*.pyc
+**.pyc
+
+*.txt
+**.txt
+
+*.csv
+**.csv
+
+*.swp
+**.swp
+
+/fec/static/bower_components/*
+/fec/static/.sass-cache/*
+/fec/static*.DS_Store
+/fec/static/stylesheets/*

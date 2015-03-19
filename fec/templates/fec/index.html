@@ -1,0 +1,72 @@
+<html>
+<head>
+</head>
+<BODY>
+<div class="wrapper">
+    <DIV class="container">
+        <div class="row jumbotrom">
+            <h1>Hola</h1>
+        </div>
+        <div class="row">
+            Hola mundo cbvs
+        </div>
+        <div>
+            <h2>Listado de Usuarios</h2>
+            <table>
+                <thead>
+                    <tr>
+                    <td>
+                        Nombres
+                    </td>
+                    <td>
+                        Razón Social
+                    </td>
+                    <td>
+                        Identificación
+                    </td>
+                    <td>
+                        Tipo Id
+                    </td>
+                    <td>
+                        Dirección
+                    </td>
+                    <td>
+                        Email
+                    </td>
+                    <td>
+                        Phone
+                    </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr> 
+                        {% for campo in object_list %}
+                        <td>
+                        {{campo.name}}
+                        </td>
+                        <td>
+                        {{campo.razonSocial}}
+                        </td>
+                        <td>
+                        {{campo.identificacion}}
+                        </td>
+                        <td>
+                        {{campo.tipoIdentificacion}}
+                        </td>
+                        <td>
+                        {{campo.direccion}}
+                        </td>
+                        {{campo.email}}
+                        </tr>
+                        <td>
+                        {{campo.phone}}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </DIV>
+</div>
+</BODY>
+</html>
