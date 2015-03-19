@@ -1,0 +1,10 @@
+body {
+  background: red; }
+
+div {
+  display: none; }
+  div table {
+    display: none;
+    background: linear-gradient(#1e5799, #2989d8); }
+
+/*# sourceMappingURL=main.css.css.map */
