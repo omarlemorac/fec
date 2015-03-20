@@ -14,3 +14,7 @@
 /fec/static/.sass-cache/*
 /fec/static*.DS_Store
 /fec/static/stylesheets/*
+/fec/static/node_modules
+/fec/static/.tmp
+/fec/static/app/bower_components
+/fec/static/.sass-cache

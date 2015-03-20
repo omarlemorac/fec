@@ -87,7 +87,7 @@ STATIC_URL = '/static/'
 STATIC_FILESDIRS = (
     STATIC_ROOT,
 )
-TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'fec/static/templates'),)
+TEMPLATE_DIRS = (os.path.join(PROJECT_ROOT, 'static/templates'),)
 
 # Media Files (Uploads)
 
