@@ -14,6 +14,7 @@ from fec.models import l10n_ec_partner"""
 
     return render(request, 'fec/index.html', context_dict)"""
 
+
 class BdView(ListView):
     model = l10n_ec_partner
-    template_name = 'fec/index.html'
+    template_name = 'fec/showdata.html'
