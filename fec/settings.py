@@ -38,7 +38,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     #'bdapp',
     'addscript',
-    'authentication'
+    'authentication',
 )
 
 MIDDLEWARE_CLASSES = (
