@@ -1,0 +1,37 @@
+{% load static from staticfiles %}
+<!doctype html>
+<html lang="es-EC">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href=" {% static "css/libraries.min.css" %} ">
+    <link rel="stylesheet" href=" {% static "css/app.min.css" %} ">
+
+    <title>{% block titlepage %}{% endblock %}</title>
+    {% block headscripts %}{% endblock %}
+</head>
+<body>
+{% block startbody %}{% endblock %}
+
+<header class="header">
+
+</div>
+<div class="content">
+	<h1>Here's the content</h1>
+	<p>Bienvenido/a, {{ user.username }}</p>
+	{% block main_content %}
+	    
+	{% endblock main_content %}
+</div>
+<footer class="footer"></div>
+
+{% block endbody %}{% endblock %}
+</body>
+
+<script src="{% static 'js/vendor/modernizr.min.js' %}"></script>
+<script src="{% static 'js/vendor/foundation.min.js' %}"></script>
+<script src="{% static 'js/vendor/libraries.min.js' %}"></script>
+<script src="{% static 'js/app.min.js'%}"></script>
+
+{% block afterbody %}{% endblock %}
+</html>
