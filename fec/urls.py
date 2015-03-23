@@ -1,8 +1,8 @@
 from django.conf.urls import include, patterns, url
 from django.contrib import admin
-from django.conf import settings
-from django.conf.urls.static import static
 from authentication import views as authview
+from .settings import STATIC_ROOT
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 admin.autodiscover()
 
@@ -11,10 +11,6 @@ urlpatterns = patterns('',
 	url(r'^login/$', authview.login_user, name="login"), 
 )
 
-if not settings.DEBUG:
-	urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-	urlpatterns += patterns('django.views.static', r'^media/(?P<path>.*)', 'serve', {'document_root': settings.MEDIA_ROOT})
-
-
-from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-urlpatterns += staticfiles_urlpatterns()
+urlpatterns += patterns('',
+	url(r'^static/(.*)$', 'django.views.static.serve', {'document_root': STATIC_ROOT, 'show_indexes': True}),
+)

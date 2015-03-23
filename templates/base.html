@@ -1,11 +1,10 @@
-{% load static from staticfiles %}
 <!doctype html>
 <html lang="es-EC">
 <head>
     <meta charset="UTF-8">
 
-    <link rel="stylesheet" href="{% static "css/libraries.min.css" %}">
-    <link rel="stylesheet" href="{% static "css/app.min.css" %}">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/libraries.min.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/app.min.css">
 
     <title>{% block titlepage %}{% endblock %}</title>
     {% block headscripts %}{% endblock %}
@@ -28,10 +27,10 @@
 {% block endbody %}{% endblock %}
 </body>
 
-<script src="{% static 'js/vendor/modernizr.min.js' %}"></script>
-<script src="{% static 'js/vendor/foundation.min.js' %}"></script>
-<script src="{% static 'js/vendor/libraries.min.js' %}"></script>
-<script src="{% static 'js/app.min.js'%}"></script>
+<script src="{{ STATIC_URL }}js/vendor/modernizr.min.js"></script>
+<script src="{{ STATIC_URL }}js/vendor/foundation.min.js"></script>
+<script src="{{ STATIC_URL }}js/vendor/libraries.min.js"></script>
+<script src="{{ STATIC_URL }}js/app.min.js"></script>
 
 {% block afterbody %}{% endblock %}
 </html>

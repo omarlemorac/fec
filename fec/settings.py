@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)).rsplit(os.sep, 1)[0]
 
 
 # Quick-start development settings - unsuitable for production
@@ -35,7 +35,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'django.contrib.staticfiles',
+    #'django.contrib.staticfiles',
     #'bdapp',
     'addscript',
     'authentication',
@@ -52,10 +52,7 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-#TCP definition
-from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-
-TEMPLATE_CONTEXT_PROCESSORS = TCP + (
+TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.request',
     'django.core.context_processors.static',
     'django.contrib.messages.context_processors.messages',
@@ -78,7 +75,7 @@ WSGI_APPLICATION = 'fec.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'fec', 'db.sqlite3'),
+        'NAME': os.path.join(BASE_DIR, 'bd.sqlite3')
     }
 }
 
@@ -100,12 +97,11 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static', 'dist')
-
 STATIC_URL = '/static/'
 
-STATIC_FILESDIRS = (STATIC_ROOT,)
+STATIC_FILESDIRS = (os.path.join(BASE_DIR, 'static', 'dist'),)
 
-TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'static', 'templates'),)
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
 
 # Media Files (Uploads)
 
