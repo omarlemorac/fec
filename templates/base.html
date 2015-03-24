@@ -27,10 +27,14 @@
 {% block endbody %}{% endblock %}
 </body>
 
+<script src="{{ STATIC_URL }}js/vendor/libraries.min.js"></script>
 <script src="{{ STATIC_URL }}js/vendor/modernizr.min.js"></script>
 <script src="{{ STATIC_URL }}js/vendor/foundation.min.js"></script>
-<script src="{{ STATIC_URL }}js/vendor/libraries.min.js"></script>
 <script src="{{ STATIC_URL }}js/app.min.js"></script>
+
+<script>
+    $(document).foundation();
+</script>
 
 {% block afterbody %}{% endblock %}
 </html>

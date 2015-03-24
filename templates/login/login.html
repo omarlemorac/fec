@@ -1,88 +1,37 @@
-{% extends "base.html" %}
-{% block main_content %}
-{% comment %} Página de Login {% endcomment %}
-
-<div class="center row">
-    <div class="section-container tabs" data-section="tabs">
-        <section class="active">
-            <p class="title" data-section-title><a href="#">Registrate</a></p>
-            <div class="content" data-section-content>
-                <p>
-                    <div class="row">
-                        <div class="large-12 columns">
-                            <div class="signup-panel">
-                                <p class="welcome">Hola, Nuevo Usuario!</p>
-                                <form id="register" name="RegisterForm" action="/login/" method="post">
-                                	{% csrf_token %}
-                                	{% if next %}
-                                		<input type="hidden" name="next" value="{{ next }}">
-                                	{% endif %}
-                                    <div class="row collapse">
-                                        <div class="small-2  columns">
-                                            <span class="prefix"><i class="fi-torso"></i></span>
-                                        </div>
-                                        <div class="small-10  columns">
-                                            <input type="text" id="username" placeholder="Nombre">
-                                        </div>
-                                    </div>
-                                    <div class="row collapse">
-                                        <div class="small-2 columns">
-                                            <span class="prefix"><i class="fi-mail"></i></span>
-                                        </div>
-                                        <div class="small-10  columns">
-                                            <input type="text" id="password" name="password" placeholder="contraseña">
-                                        </div>
-                                    </div>
-                                    <div class="row collapse">
-                                        <div class="small-2 columns ">
-                                            <span class="prefix"><i class="fi-lock"></i></span>
-                                        </div>
-                                        <div class="small-10 columns ">
-                                            <input type="text" placeholder="Password">
-                                        </div>
-                                    </div>
-                                </form>
-                                <a href="#" class="button ">Ingresar!</a>
-                            </div>
-                        </div>
+{% extends "base.html" %} {% block main_content %} {% comment %} Página de Login {% endcomment %}
+<div class="row">
+    <div class="large-6 columns">
+        <div class="signup-panel">
+            <p class="welcome"> Bienvenido!</p>
+            <form name="LoginForm" action="/login/" method="post">
+                {% csrf_token %}
+                <div class="row collapse">
+                    <div class="small-2  columns">
+                        <span class="prefix"><i class="fi-torso-female"></i></span>
                     </div>
-                </p>
-            </div>
-        </section>
-        <section>
-            <p class="title" data-section-title><a href="#">Ingresa</a></p>
-            <div class="content" data-section-content>
-                <p>
-                    <div class="row">
-                        <div class="large-12 columns">
-                            <div class="signup-panel">
-                                <p class="welcome">Bienvenido Denuevo!</p>
-                                <form id="login" name="LoginForm" action="/register/" method="post">
-                                    <div class="row collapse">
-                                        <div class="small-2 columns">
-                                            <span class="prefix"><i class="fi-mail"></i></span>
-                                        </div>
-                                        <div class="small-10  columns">
-                                            <input type="text" placeholder="Email">
-                                        </div>
-                                    </div>
-                                    <div class="row collapse">
-                                        <div class="small-2 columns ">
-                                            <span class="prefix"><i class="fi-lock"></i></span>
-                                        </div>
-                                        <div class="small-10 columns ">
-                                            <input type="text" placeholder="Password">
-                                        </div>
-                                    </div>
-                                </form>
-                                <a href="#" class="button ">Ingresar!</a>
-                            </div>
-                        </div>
+                    {% if next %}
+                    <div class="small-10  columns">
+                        <input type="text" id="next" name="next">
                     </div>
-                </p>
-            </div>
-        </section>
+                    {% endif %}
+                    <div class="small-10  columns">
+                        <label class="control-label hidden" for="username">Usuario</label>
+                        <input type="text" id="username" name="username" placeholder="usuario">
+                    </div>
+                </div>
+                <div class="row collapse">
+                    <div class="small-2 columns ">
+                        <span class="prefix"><i class="fi-lock"></i></span>
+                    </div>
+                    <div class="small-10 columns ">
+                        <label class="control-label hidden" for="password">contraseña</label>
+                        <input type="text" placeholder="password">
+                    </div>
+                </div>
+            </form>
+            <a href="#" class="button ">Ingresar</a>
+            <p>Ya tienes una cuenta? <a href="#">Ingresa Aqui!</a></p>
+        </div>
     </div>
-<div>
-
+</div>
 {% endblock main_content %}

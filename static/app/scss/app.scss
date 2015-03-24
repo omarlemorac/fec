@@ -54,44 +54,39 @@
 Login page
 */
 
-.center.row {
-  height: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5%;
-  max-width: 500px;
-}
-
-.signup-panel {
+.signup-panel{
+  border-radius: 5px;
+  border: 1px solid #ccc;
   padding: 15px;
-  i {
+  margin-top: 30px;
+  i{
     font-size: 30px;
     line-height: 50px;
     color: #999;
   }
-  form {
-    input, span {
-      height: 50px;
-    }
+  form{
+    input, span{
+    height: 50px;
   }
-  .welcome {
+  
+  }
+  .welcome{
     font-size: 26px;
     text-align: center;
     margin-left: 0;
   }
-  .button {
+  p{
+    font-size: 13px;
+    font-weight: 200;
+    margin-left: 25%;
+  }
+  .button{
     margin-left: 35%;
   }
 }
 
-section.active {
-  padding-top: 75px !important;
-}
+/* Helper Classes */
 
-p.title {
-  border-bottom: 1px solid #cccccc !important;
-}
-
-.content {
-  height: 450px;
-}
+.hidden {
+  display: none;
+} 

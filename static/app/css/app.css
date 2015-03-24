@@ -8098,16 +8098,11 @@ th.hide-for-touch {
 /*
 Login page
 */
-.center.row {
-  height: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  margin-top: 5%;
-  max-width: 500px;
-}
-
 .signup-panel {
+  border-radius: 5px;
+  border: 1px solid #ccc;
   padding: 15px;
+  margin-top: 30px;
 }
 .signup-panel i {
   font-size: 30px;
@@ -8122,20 +8117,18 @@ Login page
   text-align: center;
   margin-left: 0;
 }
+.signup-panel p {
+  font-size: 13px;
+  font-weight: 200;
+  margin-left: 25%;
+}
 .signup-panel .button {
   margin-left: 35%;
 }
 
-section.active {
-  padding-top: 75px !important;
-}
-
-p.title {
-  border-bottom: 1px solid #cccccc !important;
-}
-
-.content {
-  height: 450px;
+/* Helper Classes */
+.hidden {
+  display: none;
 }
 
 /*# sourceMappingURL=app.css.map */
