@@ -10,6 +10,13 @@
 *.swp
 **.swp
 
+*.png
+**.png
+
+
+*.old
+**.old
+
 /fec/static/bower_components/*
 /fec/static/.sass-cache/*
 /fec/static*.DS_Store

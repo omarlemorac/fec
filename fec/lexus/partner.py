@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import conn
 import pyodbc
 import read_csv
