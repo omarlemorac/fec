@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import pyodbc
 from datetime import datetime as DT
+import suds
 
 dsn = 'lexus_desarrollo'
 user = 'sa'
@@ -9,6 +10,7 @@ database = 'ISOFTEC_CDP'
 
 con_string = 'DSN=%s;UID=%s;PWD=%s;DATABASE=%s;' % (dsn, user, password, database)
 cnxn = pyodbc.connect(con_string)
+
 
 class model():
     def __init__(self):
@@ -39,11 +41,46 @@ class model():
 
     def get_outstanding_vouchers(self):
         sql = """
+        SELECT rcbfc_cias, rcbfc_uoci, rcbfc_tpdc,
+        rcbfc_seriedc,rcbfc_nrodoc,rcbfc_clveaccs
+        FROM sco$tcbfc_sgmarl
+        WHERE  RCBFC_STATUS  = 'N'
+        AND    LEN(LTRIM(RTRIM(RCBFC_AUTFACT))) < 20
+        AND    LEN(LTRIM(RTRIM(RCBFC_FECAUT))) < 18
+        """
+        cr = self.cnxn.cursor()
+        return cr.execute(sql)
+
+    def get_outstanding_ak(self):
+        sql = """
         SELECT rcbfc_cias, rcbfc_uoci, rcbfc_tpdc, rcbfc_seriedc,rcbfc_nrodoc
         FROM sco$tcbfc_sgmarl
         WHERE len( rcbfc_autfact ) < 10
         """
         cr = self.cnxn.cursor()
         return cr.execute(sql)
+    def write_authorization(self, ak, au, ad):
+        """
+        @ak: Access Key
+        @au: Authorization number
+        @ad: Authorization date
+        """
+        sql="""
+        UPDATE sco$tcbfc_sgmarl SET rcbfc_autfact = ?,
+        rcbfc_fecaut = ?
+        WHERE  rcbfc_clveaccs = ?
+        """
+        cr = self.cnxn.cursor()
+        cr.execute(sql, (au, ad, ak))
+        cr.commit()
+        cr.close()
+
+    def proxy_authorization(self, ak, auth):
+        if not auth:
+            return
+        for a in auth['autorizacion']:
+            ad = suds.sudsobject.asdict(a)
+            if 'numeroAutorizacion' in [k for k in ad.keys()]:
+                self.write_authorization(ak, a['numeroAutorizacion'], a['fechaAutorizacion'])
 
 
