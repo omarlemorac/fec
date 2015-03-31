@@ -12,6 +12,7 @@ from email import Encoders
 def send_mail(send_from, send_to, subject, text, files=None ):
     """Send email"""
     assert isinstance(send_to, list)
+    print subject
     msg = MIMEMultipart(
         From=send_from,
         To=COMMASPACE.join(send_to),

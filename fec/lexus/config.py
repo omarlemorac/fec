@@ -22,3 +22,9 @@ mysql_config = {
   'raise_on_warnings': False,
 }
 
+couchdb_config = {
+        'user':'fullcarga',
+        'password':'fullcarga',
+        'doc_db':'fc_db',
+        'host':'http://fullcarga:fullcarga@127.0.0.1:5984'
+        }

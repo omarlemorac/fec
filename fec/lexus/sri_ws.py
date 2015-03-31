@@ -11,6 +11,8 @@ import os
 from suds.client import Client
 from suds import sudsobject
 from lexus_model import model as M
+from repo_model import Model
+import xml_writer
 
 logging.basicConfig(
          filename="/home/fec/eris.log"
@@ -24,28 +26,23 @@ class ErisError(Exception):
     def __str__(self):
         return "Error %s. %s" %(self.errornumber, self.message)
 
-def xml_2_byte(filename):
+def xml_2_byte(xml):
     import base64
-    encoded_data = base64.b64encode(open(filename, 'rb').read())
+    encoded_data = base64.b64encode(xml)
     strg = ''
     for i in xrange((len(encoded_data)/40)+1):
         strg += encoded_data[i*40:(i+1)*40]
 
     return strg
-def send_doc(docstyle, filename):
+def send_doc(docstyle, xml):
     logging.basicConfig(level=logging.INFO)
-
-    fn = os.path.join(C.signed_docs_folder, filename)
-    if not os.path.isfile(fn):
-        raise FileNotFoundError(C.signed_docs_folder, filename)
-    logging.info("Enviando: %s: %s" % (docstyle,filename))
     try:
         if docstyle == "comprobante":
             client_rec = Client(C.deliver_url)
-            response_rec = client_rec.service.validarComprobante(xml_2_byte(fn))
+            response_rec = client_rec.service.validarComprobante(xml_2_byte(xml))
         elif docstyle == "lote":
             client_rec = Client(C.deliver_batch_url)
-            response_rec = client_rec.service.validarLoteMasivo(xml_2_byte(fn))
+            response_rec = client_rec.service.validarLoteMasivo(xml_2_byte(xml))
     except Exception,e:
         logging.exception(e)
         return False
@@ -94,22 +91,32 @@ def authorize_doc(claveacceso, docstyle):
         logging.exception(e)
     return (ak, None)
 
-def test_send():
-    import xml_writer
-    m = M()
-    fns = [os.path.join(C.signed_docs_folder,\
-            "{}.{}.{}.{}.{}.xml".format(int(r[0]),int(r[1]),r[2],r[3],int(r[4]))) \
-            for r in m.get_outstanding_vouchers()]
-    for fn in fns:
-        if os.path.isfile(fn):
-            send_doc("comprobante", fn)
-    auths = []
-    for r in m.get_outstanding_vouchers():
-        auth = authorize_doc(r[5], 'comprobante')
-#        xml_writer.write_authorized_voucher(*auth)
-        auths.append(auth)
-    for auth in auths:
-        m.proxy_authorization(*auth)
 
+#    fns = [os.path.join(C.signed_docs_folder,\
+#            "{}.{}.{}.{}.{}.xml".format(int(r[0]),int(r[1]),r[2],r[3],int(r[4]))) \
+#            for r in m.get_outstanding_vouchers()]
+#    for fn in fns:
+#        if os.path.isfile(fn):
+#            send_doc("comprobante", fn)
+#    auths = []
+#    for r in m.get_outstanding_vouchers():
+#        auth = authorize_doc(r[5], 'comprobante')
+##        xml_writer.write_authorized_voucher(*auth)
+#        auths.append(auth)
+#    for auth in auths:
+#        m.proxy_authorization(*auth)
+
+def send_docs():
+    m = M()
+    mod = Model()
+    db = mod.get_database(C.couchdb_config['doc_db'])
+    for d in mod.read(C.couchdb_config['doc_db'],mod.NOT_AUTHORIZED_CMP):
+        send_doc('comprobante', d.value['comprobante'])
+        try:
+            auth = authorize_doc(d.value['claveacceso'], 'comprobante')
+            mod.write_authorized_voucher(*(C.couchdb_config['doc_db'], ) + auth )
+        except KeyError as ke:
+            print [a for a in d.value.keys()]
+        xml_writer.write_authorized_voucher(*auth)
 if __name__ == '__main__':
     test_send()
