@@ -8,7 +8,11 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import COMMASPACE, formatdate
 from email import Encoders
-
+from repo_model import Model
+import config as C
+import os
+from xreport import generate
+from xml_parser import parse, parse_voucher
 def send_mail(send_from, send_to, subject, text, files=None ):
     """Send email"""
     assert isinstance(send_to, list)
@@ -19,15 +23,24 @@ def send_mail(send_from, send_to, subject, text, files=None ):
         Date=formatdate(localtime=True),
         Subject=subject
     )
+    msg['Subject'] = subject
     msg.attach(MIMEText(text))
 
     for f in files or []:
-        attachFile = MIMEBase('application', 'PDF')
-        attachFile.set_payload(open(f, "rb").read())
-        Encoders.encode_base64(attachFile)
-        attachFile.add_header('Content-Disposition', 'attachment',
-                filename='ride.pdf')
-        msg.attach(attachFile)
+        if f[-3:] == 'pdf':
+            attachFile = MIMEBase('application', 'PDF')
+            attachFile.set_payload(open(f, "rb").read())
+            Encoders.encode_base64(attachFile)
+            attachFile.add_header('Content-Disposition', 'attachment',
+                    filename='ride.pdf')
+            msg.attach(attachFile)
+        if f[-3:] == 'xml':
+            attachFile = MIMEBase('application', 'XML')
+            attachFile.set_payload(open(f, "rb").read())
+            Encoders.encode_base64(attachFile)
+            attachFile.add_header('Content-Disposition', 'attachment',
+                    filename='comprobante.xml')
+            msg.attach(attachFile)
 
     server = smtplib.SMTP('smtp.gmail.com:587')
     username = "java.diablo@gmail.com"
@@ -36,16 +49,29 @@ def send_mail(send_from, send_to, subject, text, files=None ):
     server.starttls()
     server.login(username, password)
     server.sendmail("Accioma",
-    "marcelo.mora@hotmail.es",msg.as_string()
+    "grobalino@fullcarga.com.ec",msg.as_string()
             )
     server.quit()
 
-if __name__ == '__main__':
-    text = "Hola email"
-    subject = "Hola email"
-    send_from = "marcelo.mora@gmail.com"
-    send_to = ["java.diablo@gmail.com"]
-    files =\
-    ['/home/fec/authorized/test.pdf']
-    send_mail(send_from, send_to, subject, text, files)
 
+def send_emails():
+    m = Model()
+    couchdb = m.get_database(C.couchdb_config['doc_db'])
+    for i in m.read(C.couchdb_config['doc_db'], m.AUTHORIZED):
+        xml = os.path.join(C.authorized_docs_folder, "{}_1.xml".format( i.value['claveacceso']) )
+        rep_xml = parse(xml)
+        dct = parse_voucher(rep_xml['comprobante'])
+        pdf = os.path.join(C.authorized_docs_folder, "{}_1.pdf".format(
+            i.value['claveacceso']))
+        generate(dct, 0,pdf  )
+        text = "Documento electronico No. {}".format(i.value['claveacceso'])
+        subject = "Documento electronico'"
+        send_from = "marcelo.mora@gmail.com"
+        send_to = ["java.diablo@gmail.com"]
+        files = [xml, pdf]
+
+        send_mail(send_from, send_to, subject, text, files)
+
+
+if __name__ == '__main__':
+    send_emails()

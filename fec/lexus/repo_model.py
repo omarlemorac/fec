@@ -12,6 +12,15 @@ class Model():
         emit(null, doc.claveacceso)
         }
     """
+    AUTHORIZED = """
+    function(doc){
+        if(doc.estado == 'AUTORIZADO')
+            emit(null, {'cias':doc.cias, 'uoci':doc.uoci,
+            'wnrodoc':doc.wnrodoc, 'wserie':doc.wserie,'wtpdc':doc.wtpdc,
+            'claveacceso':doc.claveacceso}
+            );
+        }
+    """
     NOT_AUTHORIZED = """
     function(doc){
         if(doc.estado != 'AUTORIZADO')
