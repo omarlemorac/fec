@@ -7,6 +7,7 @@ from lexus_model import model as M
 import suds
 from lxml import etree
 from repo_model import Model as R
+from eris import file_manager
 
 def write_invoice_codepret( args):
     from lexus_model import model as M
@@ -73,6 +74,7 @@ def write_outstanding_vouchers():
         'estado':'GENERADO',
         'mail_sended':False,
         'mail_recipient':"",
+        'web_db_written':False,
         })
 
 
@@ -87,16 +89,18 @@ def write_authorized_voucher_xml(ak, auth):
         ad = suds.sudsobject.asdict(a)
         for k, v in ad.items():
             if v.__class__.__name__ == 'mensajes':
-                continue
-            """
-            if v.__class__.__name__ == 'mensajes':
                 mensajes = suds.sudsobject.asdict(v)
+                mensajes_el = etree.SubElement(root, k)
                 for mk, mv in mensajes.items():
+                    mensaje_el = etree.SubElement(mensajes_el, 'mensaje')
                     if mv.__class__.__name__ == 'list':
                         for ms in mv:
                             oms = suds.sudsobject.asdict(ms)
-                            print oms
-            """
+                            for omk, omv in oms.items():
+                                msg_el = etree.SubElement(mensaje_el, omk)
+                                msg_el.text = unicode(omv)
+                continue
+
             if v.__class__.__name__ == 'datetime':
                 v = v.strftime("%d/%m/%Y %H:%M:%S.%f")
             if k == 'comprobante':
@@ -104,7 +108,9 @@ def write_authorized_voucher_xml(ak, auth):
             el = etree.SubElement(root, k)
             el.text = v
         etree.ElementTree(root).write(os.path.join(C.authorized_docs_folder,
-            '{}_{}.xml'.format(ak, n)), pretty_print=True)
+            '{}_{}.xml'.format(ak, n)), pretty_print=True, xml_declaration=True,
+            encoding='UTF-8')
+        file_manager.load_auth_file('comprobante', '{}_{}.xml'.format(ak, n))
 
 def write_authorized_voucher(ak, sri_auth):
     """Writes the authorized voucher to file"""
@@ -116,8 +122,6 @@ def write_authorized_voucher(ak, sri_auth):
         ad = suds.sudsobject.asdict(a)
         if ad["estado"] == "AUTORIZADO":
             write_authorized_voucher_xml(ak, sri_auth)
-        else:
-            print "Write Error Log"
             #print ad["mensajes"]
             #print ad["ambiente"]
 

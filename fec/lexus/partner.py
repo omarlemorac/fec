@@ -7,6 +7,7 @@ cnxn = pyodbc.connect(conn.con_string)
 
 def insert_partner_row(cr,row):
 
+    print row
     sql = """
     INSERT INTO SCO$TCLIE_SGMA
     VALUES(?,?,?,?,?,?,?,?,?,?,?,?)

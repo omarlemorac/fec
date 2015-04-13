@@ -1,7 +1,6 @@
 #-*- coding: utf-8 -*-
 '''
 Created on May 26, 2014
-
 @author: marcelo
 '''
 import pdb
@@ -471,7 +470,7 @@ def load_auth_file(docstyle,filename):
         fa = time.strptime(fa_str, "%d/%m/%Y %H:%M:%S.%f")
     except:
         fa = time.strptime(fa_str, "%d/%m/%Y %H:%M:%S")
-    m1el = tree.xpath("/autorizacion/mensajes")
+#    m1el = tree.xpath("/autorizacion/mensajes")
     #Temporaly saves the xml doc to hd so I can reutilize save_doc
     with open(P.join(C.signed_docs_folder, filename), 'w') as doc_firmado:
         doc_firmado.write(c.encode('utf-8'))
@@ -490,14 +489,14 @@ def load_auth_file(docstyle,filename):
         #Elimina los mensajes referentes al documento
         delete_messages(cnx, document_id)
         #Saves all mesages in db
-        for m2 in m1el:
-            for m3 in m2:
-                for m4 in m3:
-                    insert_message(cnx\
-                            , document_id\
-                            , m4[0].text\
-                            , m4[1].text\
-                            , m4[2].text)
+#        for m2 in m1el:
+#            for m3 in m2:
+#                for m4 in m3:
+#                    insert_message(cnx\
+#                            , document_id\
+#                            , m4[0].text\
+#                            , m4[1].text\
+#                            , m4[2].text)
 
         cnx.commit()
     except Exception, e:

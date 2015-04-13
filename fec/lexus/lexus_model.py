@@ -2,6 +2,7 @@
 import pyodbc
 from datetime import datetime as DT
 import suds
+import pdb
 
 dsn = 'lexus_desarrollo'
 user = 'sa'
@@ -24,13 +25,23 @@ class model():
         cr = self.cnxn.cursor()
         return cr.execute(sql)
 
+    def to_number(self, string):
+        """docstring for to_number"""
+        try:
+            return float(string)
+        except ValueError:
+            return string
+
     def write_sale(self, sql, params):
         """write sql in database"""
         idate = DT.strptime(params[12], "%d/%m/%Y")
-        self.cr.execute(sql,params[0], params[1],params[2],params[3],params[4],params[5],
-                params[6],params[7],params[8],params[9],params[10],
+#        params1 = [self.to_number(v) for v in params ]
+        self.cr.execute(sql,params[0], params[1],params[2]
+                ,params[3],params[4],params[5],
+                params[6],params[7],params[8],
+                params[9],params[10],
                 params[11],idate,params[13],params[14],params[15],
-                params[16],)
+                params[16],params[17],params[18])
         cnxn.commit()
 
     def unlink_sale(self):
@@ -75,6 +86,35 @@ class model():
         cr.commit()
         cr.close()
 
+    def read_validation_log(self):
+        """read validation log table"""
+        sql = """
+        SELECT tsgflg_text
+        FROM sco_ttsgma_fact_log
+        """
+        cr = self.cnxn.cursor()
+        exists_log = False
+        with open('/home/fec/validation.log', 'w') as log:
+            for t in cr.execute(sql):
+                exists_log = True
+                log.write("{}\n".format(t[0]))
+        if exists_log:
+            import mail_manager
+            mail_manager.send_validation_log()
+
+
+    def validate_sales(self):
+        """Run validate sales on Lexus Database"""
+        sql="""
+        EXEC  SGM_SFE01_VLDACTRL
+        """
+        cr = self.cnxn.cursor()
+        try:
+            cr.execute(sql)
+            cr.commit()
+        except Exception, ex:
+            print ex
+        cr.close()
     def proxy_authorization(self, ak, auth):
         if not auth:
             return
@@ -82,5 +122,4 @@ class model():
             ad = suds.sudsobject.asdict(a)
             if 'numeroAutorizacion' in [k for k in ad.keys()]:
                 self.write_authorization(ak, a['numeroAutorizacion'], a['fechaAutorizacion'])
-
 

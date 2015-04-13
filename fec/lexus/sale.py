@@ -10,23 +10,22 @@ def write_sale():
     """
     sale_reader = read_csv('ventas')
     sale_writer = model()
-
     sale_writer.unlink_sale()
+
     for s in sale_reader:
         sql = """
-        INSERT INTO ISOFTEC_CDP.dbo.SCO$TCBFC_SGMA
+        INSERT INTO SCO$TCBFC_SGMA
             (FCSG_TPDC, FCSG_SERIEFC, FCSG_NROFAC, FCSG_MTIN, FCSG_CODUNI,
              FCSG_CTDDOC, FCSG_PRCUNI, FCSG_MTOREN, FCSG_MTODTO1, FCSG_PSPDCTO,
-             FCSG_MTOOBJR, FCSG_MTOIMP, FCSG_FECFACT, FCSG_NRORUC, FCSG_PSPNRO,
-             FCSG_COPA, FCSG_UOCI)
+             FCSG_MTOOBJR, FCSG_MTOIMP, FCSG_FECFACT, FCSG_NRORUC, FCSG_CODCLIE,
+             FCSG_PSPNRO,FCSG_COPA, FCSG_UOCI, FCSG_CTRL)
         VALUES
-            (?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?,? ,? ,? );
+            (?,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,? ,?,? ,? ,?,?,? );
 
         """
-
-        #print "{}{} ".format(sql, s)
         sale_writer.write_sale(sql, s)
-
+    sale_writer.validate_sales()
+    sale_writer.read_validation_log()
 def authorize_sale():
     """Authorize sale over SRI webservice"""
     sql = """

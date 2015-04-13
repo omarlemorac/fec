@@ -13,6 +13,7 @@ from suds import sudsobject
 from lexus_model import model as M
 from repo_model import Model
 import xml_writer
+import pdb
 
 logging.basicConfig(
          filename="/home/fec/eris.log"
@@ -90,22 +91,6 @@ def authorize_doc(claveacceso, docstyle):
     except Exception, e:
         logging.exception(e)
     return (ak, None)
-
-
-#    fns = [os.path.join(C.signed_docs_folder,\
-#            "{}.{}.{}.{}.{}.xml".format(int(r[0]),int(r[1]),r[2],r[3],int(r[4]))) \
-#            for r in m.get_outstanding_vouchers()]
-#    for fn in fns:
-#        if os.path.isfile(fn):
-#            send_doc("comprobante", fn)
-#    auths = []
-#    for r in m.get_outstanding_vouchers():
-#        auth = authorize_doc(r[5], 'comprobante')
-##        xml_writer.write_authorized_voucher(*auth)
-#        auths.append(auth)
-#    for auth in auths:
-#        m.proxy_authorization(*auth)
-
 def send_docs():
     m = M()
     mod = Model()
@@ -113,10 +98,13 @@ def send_docs():
     for d in mod.read(C.couchdb_config['doc_db'],mod.NOT_AUTHORIZED_CMP):
         send_doc('comprobante', d.value['comprobante'])
         try:
+            logging.info("Authorizing {}".format(d.value['claveacceso']))
             auth = authorize_doc(d.value['claveacceso'], 'comprobante')
             mod.write_authorized_voucher(*(C.couchdb_config['doc_db'], ) + auth )
         except KeyError as ke:
             print [a for a in d.value.keys()]
+        except Exception as ex:
+            print ex
         xml_writer.write_authorized_voucher(*auth)
 if __name__ == '__main__':
     test_send()

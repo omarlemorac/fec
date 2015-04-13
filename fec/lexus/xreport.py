@@ -9,7 +9,7 @@ from reportlab.graphics import renderPDF
 from reportlab.graphics.shapes import Drawing
 import time
 import pdb
-
+tipo_emision = {'1':u'PRUEBAS', '2':u'PRODUCCIÓN'}
 def rcandrawString(can, x, y, cadena):
     can.drawRightString(x, y, cadena)
 
@@ -66,23 +66,23 @@ def generate(data, ix, fileout):
     can.drawString(305,660,u'No.       '+infoTributaria["estab"]+"-"+infoTributaria["ptoEmi"]+"-"+infoTributaria["secuencial"])
     can.setFont('Helvetica', 12)
     can.drawString(305,640,u'NÚMERO DE AUTORIZACIÓN')
-    can.setFont('Helvetica', 10)
-    can.drawString(305,620,u'23102014122010179894849848949')
+    can.setFont('Helvetica', 10 )
+    can.drawString(305,620,data['numeroAutorizacion'])
     can.drawString(305,600,u'FECHA Y HORA DE')
     can.drawString(305,590,u'AUTORIZACIÓN')
 
     can.setFont('Helvetica', 8)
-    can.drawString(425,595, time.strftime('%Y-%m-%dT%H:%M:%S'))
+    can.drawString(425,595, data['fechaAutorizacion'])
     can.setFont('Helvetica', 10)
 
-    can.drawString(305,570,u'AMBIENTE: PRODUCCIÓN')
+    can.drawString(305,570,u'AMBIENTE:')
+    can.drawString(420,570,tipo_emision[infoTributaria['tipoEmision']])
     can.drawString(305,550,u'EMISIÓN: NORMAL')
     can.setFont('Helvetica', 12)
     can.drawString(305,530,u'CLAVE DE ACCESO')
     can.setFont('Helvetica', 8)
     code=infoTributaria["claveAcceso"]
 
-    #Revisar el mejor algoritmo para el codigo de barras
     barcode = code128.Code128(code)
     barcode.barWidth=0.6
     barcode.barHeight=30
@@ -100,22 +100,22 @@ def generate(data, ix, fileout):
     can.drawString(65,540,u'Matriz:')
 
 
-    can.drawString(130,545,infoTributaria["dirMatriz"])
+    drawString(can, 110,545,infoTributaria["dirMatriz"])
 
     can.drawString(65,520,u'Dirección')
     can.drawString(65,510,u'Sucursal:')
 
-    drawString(can,130,515,infoFactura["dirEstablecimiento"], 40)
+    drawString(can,110,515,infoFactura["dirEstablecimiento"], 40)
 
     can.drawString(65,480,u'Contribuyente Especial Nro')
-    can.drawString(180,480,'1423')
+    can.drawString(180,480,infoFactura['contribuyenteEspecial'])
 
     can.drawString(65,460,u'OBLIGADO A LLEVAR CONTABILIDAD')
     can.drawString(220,460,infoFactura["obligadoContabilidad"])
 
     #contenido del cuadro intermedio
     can.drawString(65,430,u'Razón Social / Nombres y Apellidos: ')
-    can.drawString(220,430,infoFactura["razonSocialComprador"])
+    can.drawString(65,415,infoFactura["razonSocialComprador"])
 
     can.drawString(365,430,u'Identificación:   '+infoFactura["identificacionComprador"])
     can.drawString(65,400,u'Fecha Emisión:    ' +infoFactura["fechaEmision"])
@@ -230,15 +230,20 @@ def generate(data, ix, fileout):
     rcandrawString(can, x, ys[9]-15, "0")
     rcandrawString(can, x, ys[10]-15, str(round(imp + float(infoFactura["totalSinImpuestos"]), 2)))
     sk = ss-(lt*8)-2
-    can.rect(70, sk, 248, (lt*6), stroke=1, fill=0)
+    can.rect(70, sk, 248, (lt*6)+40, stroke=1, fill=0)
     sk +=(lt*6)
     can.setFont('Helvetica', 12)
-    can.drawString(105,sk - 15, u"Información Adicional")
-    can.drawString(75,sk - 45, u"Dirección")
-    can.drawString(75,sk - 75, u"Teléfono")
-    can.drawString(75,sk - 105, u"Email")
-
-
+    can.drawString(105,sk+15 , u"Información Adicional")
+    can.setFont('Helvetica', 11)
+    can.drawString(75,sk , u"Dirección")
+    can.drawString(75,sk - 33, u"Teléfono")
+    can.drawString(75,sk - 61, u"Email")
+    can.drawString(75,sk - 87, u"Observación")
+    can.setFont('Helvetica', 8)
+    can.drawString(75,sk - 12, data['infoAdicional']['Direccion'])
+    can.drawString(75,sk - 42, data['infoAdicional']['Telefono'])
+    can.drawString(75,sk - 70, data['infoAdicional']['Email'])
+    can.drawString(75,sk - 97, data['infoAdicional']['Observacion'])
 
     """can.drawString(30,735,'OF ACME INDUSTRIES')
     can.drawString(500,750,"12/12/2010")

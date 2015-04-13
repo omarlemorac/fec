@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from lxml import etree
 from io import StringIO, BytesIO
+import pdb
 def parse_voucher(xml):
     """Parse voucher xml"""
     myxml = xml.encode('utf-8')
@@ -34,6 +35,11 @@ def parse_voucher(xml):
                     tci[i1.tag] = i1.text
                 totalConImpuestos.append(tci)
             res['infoFactura']['totalConImpuestos'] = totalConImpuestos
+
+    res['infoAdicional'] = {}
+    for val in [(el.get('nombre'), el.text) for el in
+            comprobante.find('.//infoAdicional')]:
+        res['infoAdicional'][val[0]] = val[1]
 
     return res
 

@@ -4,7 +4,11 @@ Created on May 24, 2014
 @author: marcelo
 '''
 
-
+csv_files=['ventas.csv', 'clientes.csv']
+filenames = {
+        'clientes' : '/home/fec/csv/clientes.csv',
+        'ventas' : '/home/fec/csv/ventas.csv',
+        }
 signed_docs_folder="/home/fec/signed/"
 temp_folder="/home/fec/signed/"
 unsigned_docs_folder="/home/fec/unsigned/"

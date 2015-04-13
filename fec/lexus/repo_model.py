@@ -14,10 +14,12 @@ class Model():
     """
     AUTHORIZED = """
     function(doc){
-        if(doc.estado == 'AUTORIZADO')
+        if(doc.estado == 'AUTORIZADO' && !mail_sended)
             emit(null, {'cias':doc.cias, 'uoci':doc.uoci,
             'wnrodoc':doc.wnrodoc, 'wserie':doc.wserie,'wtpdc':doc.wtpdc,
-            'claveacceso':doc.claveacceso}
+            'claveacceso':doc.claveacceso,
+            'numeroAutorizacion':doc.numeroAutorizacion,
+            'fechaAutorizacion':doc.fechaAutorizacion}
             );
         }
     """
@@ -43,17 +45,26 @@ class Model():
     function(doc){
         if(doc.claveacceso == '%s')
             emit(null, doc.claveacceso);
-
         }
     """
     GET_ID = """
     function(doc){
         if(doc.claveacceso == '%s')
             emit(null, doc.id);
-
         }
     """
-
+    SEND_BY_MAIL = """
+    function(doc){
+        if(!doc.mail_sended)
+            emit(null, doc.id);
+        }
+    """
+    WRITE_WEB_DB = """
+    function(doc){
+        if(!doc.web_db_written)
+            emit(null, doc.id);
+        }
+    """
     def _get_server(self):
         """docstring for _get_server"""
         return couchdb.Server(C.couchdb_config["host"])
@@ -101,6 +112,15 @@ class Model():
                         v = v.strftime("%d/%m/%Y %H:%M:%S.%f")
                     doc[k] = v
                 db.save(doc)
+
+    def write_mail_sended(self, dbname, ak):
+        """Writes True in mail sended"""
+        ids_lst = self.read(dbname, self.GET_ID % ak)
+        db = self.get_database(dbname)
+        for _id in ids_lst:
+            doc = db[_id.id]
+            doc['mail_sended'] = True
+            db.save(doc)
 
     def write_authorized_voucher(self, db, ak, sri_auth):
         """Writes the authorized voucher to file"""
