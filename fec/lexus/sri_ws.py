@@ -95,6 +95,7 @@ def send_docs():
     m = M()
     mod = Model()
     db = mod.get_database(C.couchdb_config['doc_db'])
+
     for d in mod.read(C.couchdb_config['doc_db'],mod.NOT_AUTHORIZED_CMP):
         send_doc('comprobante', d.value['comprobante'])
         try:

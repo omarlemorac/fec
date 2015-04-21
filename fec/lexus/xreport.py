@@ -8,7 +8,9 @@ from reportlab.graphics.barcode import code39, code128, code93, eanbc, qr, usps
 from reportlab.graphics import renderPDF
 from reportlab.graphics.shapes import Drawing
 import time
+import os
 import pdb
+
 tipo_emision = {'1':u'PRUEBAS', '2':u'PRODUCCIÓN'}
 def rcandrawString(can, x, y, cadena):
     can.drawRightString(x, y, cadena)
@@ -37,7 +39,9 @@ def candrawString(can, x, y, cadena):
 
 
 def generate(data, ix, fileout):
-
+    abspath = os.path.abspath(__file__)
+    dname = os.path.dirname(abspath)
+    os.chdir(dname)
     infoTributaria = data["infoTributaria"]
     infoFactura = data["infoFactura"]
     #detalles=data["detalles"]["detalle"]

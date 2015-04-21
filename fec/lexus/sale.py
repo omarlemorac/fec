@@ -44,7 +44,6 @@ def authorize_sale():
             'wnrodoc':int(l[4]),
             }
         print l, args
-        pdb.set_trace()
         print xml_writer.write_invoice_codepret(args)
 
 if __name__ == '__main__':

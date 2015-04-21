@@ -72,9 +72,7 @@ def write_outstanding_vouchers():
         'wnrodoc':int(r[4]),
         'claveacceso':r[5],
         'estado':'GENERADO',
-        'mail_sended':False,
-        'mail_recipient':"",
-        'web_db_written':False,
+        'state':'draft',
         })
 
 

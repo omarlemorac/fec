@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 import pyodbc
 from datetime import datetime as DT
+import config as C
 import suds
 import pdb
+import repo_model
 
 dsn = 'lexus_desarrollo'
 user = 'sa'
@@ -123,3 +125,24 @@ class model():
             if 'numeroAutorizacion' in [k for k in ad.keys()]:
                 self.write_authorization(ak, a['numeroAutorizacion'], a['fechaAutorizacion'])
 
+    def process_outstanding_vouchers(self):
+        """Process outstandig vouchers from REL table"""
+        sql = "EXEC SGM_SFE09_ACTAUTO "
+        cr = self.cnxn.cursor()
+        try:
+            cr.execute(sql)
+            cr.commit()
+        except Exception, ex:
+            print ex
+        cr.close()
+
+    def update_lexus_authno(self):
+        """Update Lexus authorization number"""
+        rm = repo_model.Model()
+        couchdb = rm.get_database(C.couchdb_config['doc_db'])
+        for i in rm.read(C.couchdb_config['doc_db'], rm.WRITE_LEXUS_DB):
+            self.write_authorization(i.value['claveacceso'],
+                                     i.value['numeroAutorizacion'],
+                                     i.value['fechaAutorizacion'])
+
+            rm.write_lexus_update(C.couchdb_config['doc_db'],i.value['claveacceso'])
