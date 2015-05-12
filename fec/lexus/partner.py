@@ -21,7 +21,6 @@ def insert_partners():
     sql = "delete from SCO$TCLIE_SGMA"
     cursor.execute(sql)
     for p in read_csv.read_partner():
-        pdb.set_trace()
         insert_partner_row(cursor, p)
 
     cnxn.commit()

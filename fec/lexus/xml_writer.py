@@ -29,6 +29,7 @@ def write_invoice_codepret( args):
     sql = statement.format(**args)
     m = M()
 
+    z = m.read(sql).fetchall()
     with open(fu_path, 'w') as fu:
         fu.write( '\n'.join([r[0] for r in m.read(sql).fetchall()]))
     os.chdir('/var/lib/eris/')

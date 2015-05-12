@@ -66,6 +66,7 @@ def authorize_doc(claveacceso, docstyle):
     import logging
     logging.getLogger('suds.transport.http').setLevel(logging.INFO)
     logging.info("Autorizando: %s" % (claveacceso))
+    ak = ""
 
     try:
         headers = {'Content-Type': 'application/soap+xml; charset="UTF-8"'}
@@ -76,7 +77,6 @@ def authorize_doc(claveacceso, docstyle):
             response_aut = client_aut.service.autorizacionComprobanteLoteMasivo(claveacceso)
 
         res = sudsobject.asdict(response_aut)
-        ak = ""
 
         if "claveAccesoConsultada" in res.keys():
             ak = res["claveAccesoConsultada"]
@@ -102,10 +102,10 @@ def send_docs():
             logging.info("Authorizing {}".format(d.value['claveacceso']))
             auth = authorize_doc(d.value['claveacceso'], 'comprobante')
             mod.write_authorized_voucher(*(C.couchdb_config['doc_db'], ) + auth )
+            xml_writer.write_authorized_voucher(*auth)
         except KeyError as ke:
             print [a for a in d.value.keys()]
         except Exception as ex:
             print ex
-        xml_writer.write_authorized_voucher(*auth)
 if __name__ == '__main__':
     test_send()

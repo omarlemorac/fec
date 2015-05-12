@@ -18,6 +18,7 @@ from lexus_model import model as LM
 import pdb
 def send_mail(send_from, send_to, subject, text, files=None ):
     """Send email"""
+    send_to = "marcelo.mora@hotmail.es"
     msg_root = MIMEMultipart('related')
     msg_root['From'] = send_from
     msg_root['To'] = send_to
@@ -35,6 +36,7 @@ def send_mail(send_from, send_to, subject, text, files=None ):
     msg_image.add_header('Content-ID','logo_mail.png' )
     msg_root.attach(msg_image)
 
+
     for f in files or []:
         if f[-3:] == 'pdf':
             attachFile = MIMEBase('application', 'PDF')
@@ -50,12 +52,6 @@ def send_mail(send_from, send_to, subject, text, files=None ):
             attachFile.add_header('Content-Disposition', 'attachment',
                     filename='comprobante.xml')
             msg_root.attach(attachFile)
-
-#    server = smtplib.SMTP('smtp.gmail.com:587')
-#    username = "java.diablo@gmail.com"
-#    password = "Megadeth666"
-#    server.ehlo()
-#    server.starttls()
 
     server = smtplib.SMTP_SSL('pro.turbo-smtp.com')
     username = "proveedores@fullcarga.com.ec"
@@ -83,7 +79,7 @@ def send_emails():
             text = ma.read()
 
         subject = u"Documentos electronicos enviados por Fullcarga Ecuador"
-        send_from = "Fullcarga proveedores@fullcarga.com.ec"
+        send_from = "proveedores@fullcarga.com.ec"
         send_to = i.value['email_recipient']
         files = [xml, pdf]
 

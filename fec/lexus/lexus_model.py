@@ -23,7 +23,6 @@ class model():
 
     def read(self, sql):
         """Execute command in database"""
-        print sql
         cr = self.cnxn.cursor()
         return cr.execute(sql)
 

@@ -12,7 +12,7 @@ import argparse
 from lxml import etree
 from datetime import datetime as DT
 import pdb
-import os 
+import os
 import time
 L.basicConfig(
          filename=P.join(C.authorized_docs_folder,"eris.log")
@@ -166,7 +166,6 @@ def save_auth_file(response, fn):
                             except:
                                 pass
             xfn = P.basename(fn)
-#	    pdb.set_trace()
             if not auth_no:
                 counter += 1
                 xfn = "%s%03d.XML" % ( P.basename(fn)[:-4], counter )
